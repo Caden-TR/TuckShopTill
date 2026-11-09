@@ -84,6 +84,22 @@ fun takePayment(paidText: String, toPay: Int): String {
 // ---- Stage 6: mealDealDiscount ---------------------------------------
 // Write fun mealDealDiscount(basket: List<String>): Int here.
 
+fun mealDealDiscount(basket: List<String>): Int {
+    var hasDrink = false
+    var hasSnack = false
+    for (item in basket) {
+        when (item) {
+            "Water", "Juice" -> hasDrink = true
+            "Crisps", "Chocolate" -> hasSnack = true
+        }
+    }
+    if (hasDrink && hasSnack) {
+        return 50
+    } else {
+        return 0
+    }
+}
+
 
 // ---- The app ---------------------------------------------------------
 // Stage 1: replace this whole function with the code on your task sheet.
@@ -106,6 +122,10 @@ fun TuckShopTillApp(modifier: Modifier = Modifier) {
         message = ""
         paidText = ""
     }
+
+    val discount = mealDealDiscount(basket)
+    val toPay = totalPence - discount
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -115,6 +135,10 @@ fun TuckShopTillApp(modifier: Modifier = Modifier) {
         Text("Tuck Shop Till", fontSize = 32.sp)
         Spacer(modifier = Modifier.height(16.dp))
         Text("Total: ${formatPounds(totalPence)}", fontSize = 24.sp)
+        if (discount > 0) {
+            Text("Meal deal: -${formatPounds(discount)}", color = Color(0xFF17704A))
+            Text("To pay: ${formatPounds(toPay)}", fontSize = 24.sp)
+        }
         Spacer(modifier = Modifier.height(16.dp))
         Row {
             Button(onClick = { addItem("Crisps", 80) }) {
@@ -150,7 +174,7 @@ fun TuckShopTillApp(modifier: Modifier = Modifier) {
             label = { Text("Money given, in pence") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
-        Button(onClick = { message = takePayment(paidText, totalPence) }) {
+        Button(onClick = { message = takePayment(paidText, toPay) }) {
             Text("Pay")
         }
 
