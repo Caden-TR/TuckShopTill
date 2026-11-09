@@ -80,15 +80,24 @@ fun formatPounds(pence: Int): String {
 fun TuckShopTillApp(modifier: Modifier = Modifier) {
     var totalPence by remember { mutableStateOf(0) }
     var message by remember { mutableStateOf("") }
+    val basket = remember { mutableStateListOf<String>() }
     fun addItem(name: String, price: Int) {
+        basket.add(name)
         totalPence = totalPence + price
         message = "Added $name"
+
     }
     fun clearAll() {
+        basket.clear()
         totalPence = 0
         message = ""
     }
-    Column(modifier = modifier.fillMaxSize().padding(24.dp)) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(24.dp)
+    ) {
         Text("Tuck Shop Till", fontSize = 32.sp)
         Spacer(modifier = Modifier.height(16.dp))
         Text("Total: ${formatPounds(totalPence)}", fontSize = 24.sp)
@@ -113,6 +122,11 @@ fun TuckShopTillApp(modifier: Modifier = Modifier) {
         }
         OutlinedButton(onClick = { clearAll() }) {
             Text("Clear")
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Text("Basket: ${basket.size} items", fontSize = 20.sp)
+        for (item in basket) {
+            Text("- $item")
         }
         Spacer(modifier = Modifier.height(16.dp))
         Text(message, fontSize = 20.sp)
