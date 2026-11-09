@@ -72,12 +72,14 @@ class MainActivity : ComponentActivity() {
 // After that, each stage adds to it.
 @Composable
 fun TuckShopTillApp(modifier: Modifier = Modifier) {
+    var totalPence by remember { mutableStateOf(0) }
+
     Column(modifier = modifier.fillMaxSize().padding(24.dp)) {
         Text("Tuck Shop Till", fontSize = 32.sp)
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Total: £0.00", fontSize = 24.sp)
+        Text("Total: ${totalPence}p", fontSize = 24.sp)
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { }) {
+        Button(onClick = { totalPence = totalPence + 80 }) {
             Text("Crisps 80p")
         }
     }
