@@ -58,6 +58,12 @@ class MainActivity : ComponentActivity() {
 // ---- Stage 3: formatPounds -------------------------------------------
 // Write fun formatPounds(pence: Int): String here.
 
+fun formatPounds(pence: Int): String {
+    val pounds = pence / 100
+    val pennies = pence % 100
+    return "£" + pounds + "." + pennies.toString().padStart(2, '0')
+}
+
 
 // ---- Stage 5: takePayment --------------------------------------------
 // Write fun takePayment(paidText: String, toPay: Int): String here.
@@ -73,15 +79,43 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TuckShopTillApp(modifier: Modifier = Modifier) {
     var totalPence by remember { mutableStateOf(0) }
-
+    var message by remember { mutableStateOf("") }
+    fun addItem(name: String, price: Int) {
+        totalPence = totalPence + price
+        message = "Added $name"
+    }
+    fun clearAll() {
+        totalPence = 0
+        message = ""
+    }
     Column(modifier = modifier.fillMaxSize().padding(24.dp)) {
         Text("Tuck Shop Till", fontSize = 32.sp)
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Total: ${totalPence}p", fontSize = 24.sp)
+        Text("Total: ${formatPounds(totalPence)}", fontSize = 24.sp)
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { totalPence = totalPence + 80 }) {
-            Text("Crisps 80p")
+        Row {
+            Button(onClick = { addItem("Crisps", 80) }) {
+                Text("Crisps ${formatPounds(80)}")
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Button(onClick = { addItem("Chocolate", 95) }) {
+                Text("Chocolate ${formatPounds(95)}")
+            }
         }
+        Row {
+            Button(onClick = { addItem("Water", 70) }) {
+                Text("Water ${formatPounds(70)}")
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Button(onClick = { addItem("Juice", 110) }) {
+                Text("Juice ${formatPounds(110)}")
+            }
+        }
+        OutlinedButton(onClick = { clearAll() }) {
+            Text("Clear")
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(message, fontSize = 20.sp)
     }
 }
 
