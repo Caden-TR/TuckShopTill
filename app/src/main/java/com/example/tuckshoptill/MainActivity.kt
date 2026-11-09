@@ -68,6 +68,18 @@ fun formatPounds(pence: Int): String {
 // ---- Stage 5: takePayment --------------------------------------------
 // Write fun takePayment(paidText: String, toPay: Int): String here.
 
+fun takePayment(paidText: String, toPay: Int): String {
+    val paid = paidText.toIntOrNull()
+    if (paid == null) {
+        return "Please type a whole number of pence, like 200"
+    } else if (paid < toPay) {
+        return "Not enough. You need ${formatPounds(toPay - paid)} more"
+    } else {
+        return "Thank you! Change: ${formatPounds(paid - toPay)}"
+    }
+}
+
+
 
 // ---- Stage 6: mealDealDiscount ---------------------------------------
 // Write fun mealDealDiscount(basket: List<String>): Int here.
@@ -81,6 +93,7 @@ fun TuckShopTillApp(modifier: Modifier = Modifier) {
     var totalPence by remember { mutableStateOf(0) }
     var message by remember { mutableStateOf("") }
     val basket = remember { mutableStateListOf<String>() }
+    var paidText by remember { mutableStateOf("") }
     fun addItem(name: String, price: Int) {
         basket.add(name)
         totalPence = totalPence + price
@@ -91,6 +104,7 @@ fun TuckShopTillApp(modifier: Modifier = Modifier) {
         basket.clear()
         totalPence = 0
         message = ""
+        paidText = ""
     }
     Column(
         modifier = modifier
@@ -128,6 +142,19 @@ fun TuckShopTillApp(modifier: Modifier = Modifier) {
         for (item in basket) {
             Text("- $item")
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(
+            value = paidText,
+            onValueChange = { paidText = it },
+            label = { Text("Money given, in pence") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
+        Button(onClick = { message = takePayment(paidText, totalPence) }) {
+            Text("Pay")
+        }
+
+
         Spacer(modifier = Modifier.height(16.dp))
         Text(message, fontSize = 20.sp)
     }
